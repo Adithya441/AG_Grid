@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo, useCallback } from "react"
 import { AgGridReact } from 'ag-grid-react'; // React Data Grid Component
 import "ag-grid-community/styles/ag-grid.css"; // Mandatory CSS required by the Data Grid
 import "ag-grid-community/styles/ag-theme-quartz.css"; // Using quartz theme
-
+import loadingImage from './img2.gif'
 import './Sidebar.css'
 import { BsFilterRight } from "react-icons/bs";
 import { IoClose } from "react-icons/io5";
@@ -12,6 +12,7 @@ export function SideBar() {
     const gridRef = useRef();
     const [gridApi, setGridApi] = useState(null);// Using a ref to hold the grid API
     const [columnApi, setColumnApi] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [modal,setModal] = useState(false);
     const [rowData, setRowData] = useState([]);
     const [columnDef] = useState([
@@ -56,16 +57,19 @@ export function SideBar() {
     }), []);
 
     useEffect(() => {
-        fetch('http://localhost:3004/users')
-            .then((response) => response.json())
-            .then((data) => {
+        const fetchData = async () => {
+            try {
+                setLoading(true); // Show spinner while data is loading
+                const response = await fetch('http://localhost:3004/users');
+                const data = await response.json();
                 setRowData(data);
-            })
-            .catch((error) => console.error('Error fetching data:', error));
-    }, []);
-
-    const cellClickedListener = useCallback((e) => {
-        console.log('cellClicked', e);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            } finally {
+                setLoading(false); // Hide spinner when data is loaded
+            }
+        };
+        fetchData();
     }, []);
 
 
@@ -264,9 +268,13 @@ export function SideBar() {
             <BsFilterRight size={25} style={{marginLeft:'470px', cursor:'pointer'}} onClick={setpanel}/>
             </div>
             <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+            {loading ? (
+                <div className="loading-overlay">
+                    <img src={loadingImage} alt="Loading..." style={{ width: '50px', height: '50px' }} />
+                </div> // Use an image as the loading spinner
+            ) : (
                 <AgGridReact
                     ref={gridRef}
-                    onCellClicked={cellClickedListener}
                     rowData={rowData}
                     animateRows={true}
                     columnDefs={columnDef}
@@ -275,6 +283,7 @@ export function SideBar() {
                     onGridReady={onGridReady}
                     gridOptions={gridOptions}
                 />
+            )}
             </div>
 
             
