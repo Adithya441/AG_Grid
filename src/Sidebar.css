@@ -1,0 +1,109 @@
+.ag-theme-quartz,
+.ag-theme-quartz-dark {
+    /* bright green, 10% opacity */
+    --ag-selected-row-background-color: rgba(25, 33, 182, 0.4);
+    --ag-foreground-color: rgb(126, 46, 132);
+    --ag-background-color: rgb(249, 245, 227);
+    --ag-header-foreground-color: rgb(183, 250, 90);
+    --ag-header-background-color: rgb(209, 64, 129);
+    --ag-odd-row-background-color: rgb(0, 0, 0, 0.03);
+    --ag-header-column-resize-handle-color: rgb(126, 46, 132);
+
+    --ag-font-size: 17px;
+    --ag-font-family: monospace;
+}
+
+.ag-theme-quartz .ag-header-cell-label {
+    font-style: italic;
+}
+.ag-theme-quartz .ag-header-group-cell {
+    font-weight: normal;
+    font-size: 22px;
+}
+.ag-theme-quartz .ag-header-cell {
+    font-size: 18px;
+}
+
+.filter{
+    display: flex;
+    flex-direction: row; /* Align checkboxes horizontally */
+    width: 100vw; /* Fixed width to create overflow */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    border: 1px solid #ccc; /* Optional: For visualization */
+    padding: 10px; /* Optional: Padding */
+    scroll-behavior: smooth;
+}
+.checkbox-item {
+    margin-right: 60px; /* Space between checkboxes */
+  }
+
+.table {
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: rgba(209, 64, 129,0.5);
+}
+.table h3{
+    padding-left: 500px;
+}
+
+.btn{
+    padding-left: 810px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+
+.heading{
+    font-weight: 500;
+}
+
+/* Container for the toggle switch */
+.toggle-switch {
+    position: relative;
+    width: 60px;
+    height: 34px;
+  }
+  
+  /* Hide the default checkbox */
+  .toggle-input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  /* The switch background */
+  .toggle-label {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    border-radius: 34px;
+    transition: background-color 0.2s;
+  }
+  
+  /* The slider/handle */
+  .toggle-label::before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  
+  /* When the checkbox is checked */
+  .toggle-input:checked + .toggle-label {
+    background-color: #4caf50; /* Color when toggled on */
+  }
+  
+  /* Move the slider to the right */
+  .toggle-input:checked + .toggle-label::before {
+    transform: translateX(26px);
+  }
+  

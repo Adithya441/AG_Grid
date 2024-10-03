@@ -4,12 +4,20 @@ import './index.css';
 import {App} from './App';
 import MyAgGrid from './Aggrids';
 import reportWebVitals from './reportWebVitals';
+import { SideBar } from './Sidebar';
+import CheckboxComponent from './sidebar2';
+import Xyz from './sidebar2';
+import GridComponent from './sidebar2';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <App />
+    {/* <App /> */}
     {/* <MyAgGrid/> */}
+    <SideBar/> 
+    {/* <GridComponent/> */}
+    {/* <CheckboxComponent/> */}
+    {/* <Xyz/> */}
   </React.StrictMode>
 );
 

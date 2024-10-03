@@ -21,14 +21,23 @@ const AGGridExample = () => {
 
   // Store the APIs when the grid is ready
   const onGridReady = (params) => {
+    console.log("onGridReady params: ", params); // Debugging to check params
+
     setGridApi(params.api);
     setColumnApi(params.columnApi);
+
+    // Check if columnApi is defined
+    if (params.columnApi) {
+      console.log('Column API is available:', params.columnApi);
+    } else {
+      console.log('Column API is NOT available.');
+    }
   };
 
   // Hide a specific column (for example: hide 'Model' column)
   const hideModelColumn = () => {
     if (columnApi) {
-      columnApi.setColumnsVisible('model', false); // Hide 'model' column
+      columnApi.setColumnVisible('model', false); // Hide 'model' column
     } else {
       console.log('Column API is not available yet');
     }
@@ -39,7 +48,7 @@ const AGGridExample = () => {
     if (columnApi) {
       const allColumns = columnApi.getAllColumns();
       allColumns.forEach((column) => {
-        columnApi.setColumnsVisible(column.getColId(), true);
+        columnApi.setColumnVisible(column.getColId(), true);
       });
     } else {
       console.log('Column API is not available yet');
