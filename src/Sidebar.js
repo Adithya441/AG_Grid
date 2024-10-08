@@ -108,6 +108,59 @@ export function SideBar() {
         }
       };
 
+
+      const openNewTab = () => {
+        if (!gridApi || !columnApi) return;
+      
+        // Get selected nodes (rows)
+        const selectedNodes = gridApi.getSelectedNodes();
+        const selectedData = selectedNodes.map(node => node.data);
+      
+        // Get only the visible columns
+        const visibleColumns = columnApi.getAllDisplayedColumns();
+        const visibleColumnFields = visibleColumns.map(col => col.getColId());
+      
+        // Filter the selected row data to include only visible columns
+        const filteredSelectedData = selectedData.map(row =>
+          Object.keys(row)
+            .filter(key => visibleColumnFields.includes(key)) // Include only visible columns
+            .reduce((obj, key) => {
+              obj[key] = row[key];
+              return obj;
+            }, {})
+        );
+      
+        // Create new window/tab and display filtered data
+        const newTab = window.open();
+        newTab.document.write(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Selected Data</title>
+              <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-grid.css" />
+              <link rel="stylesheet" href="https://unpkg.com/ag-grid-community/styles/ag-theme-quartz.css" />
+              <script src="https://unpkg.com/ag-grid-community/dist/ag-grid-community.noStyle.js"></script>
+              <link rel="stylesheet" href="Sidebar.css">
+            </head>
+            <body>
+              <div id="newGrid" class="ag-theme-quartz" style="height: 300px; width: 100%;"></div>
+              <script>
+                const gridOptions = {
+                  columnDefs: ${JSON.stringify(visibleColumns.map(col => ({ field: col.getColId(), headerName: col.getColDef().headerName })))},
+                  rowData: ${JSON.stringify(filteredSelectedData)}
+                };
+      
+                const eGridDiv = document.getElementById('newGrid');
+                new agGrid.Grid(eGridDiv, gridOptions);
+              </script>
+            </body>
+          </html>
+        `);
+        newTab.document.close(); // Important: close the document to render the content
+      };
+      
+      
+
         const resetState = () => {
             console.log(checkboxState);
             setCheckboxState({
@@ -129,10 +182,10 @@ export function SideBar() {
             setModal(true);
         }
 
-        const [inputValue, setInputValue] = useState(''); // Declare state for the input value
+        const [inputValue, setInputValue] = useState('');
 
   const handleChange = (e) => {
-    setInputValue(e.target.value); // Update the state when input changes
+    setInputValue(e.target.value);
   };
 
   const handleSubmit = (e) => {
@@ -154,10 +207,11 @@ export function SideBar() {
                     onChange={handleChange} // Update state on change
                 />
                  <button onClick={handleSubmit} style={{ marginLeft: '15px', marginRight:'15px' }}>Export</button>
-                 <button onClick={() => resetState()} style={{marginRight:'45px'}}>
+                 <button onClick={() => resetState()} style={{marginRight:'10px'}}>
                     Reset
                 </button>
-                <IoClose style={{marginRight:'30px', cursor:'pointer'}} size={25} onClick={()=>setModal(false)}/>
+                <button onClick={openNewTab} style={{marginRight:'30px'}}>Selected Data</button>
+                <IoClose style={{marginRight:'30px', cursor:'pointer', marginTop:'5px'}} size={25} onClick={()=>setModal(false)}/>
             </div> 
             <div className="filter">
                 <div className="checkbox-item">
@@ -267,11 +321,11 @@ export function SideBar() {
             <h3>Employee Details</h3>
             <BsFilterRight size={25} style={{marginLeft:'470px', cursor:'pointer'}} onClick={setpanel}/>
             </div>
-            <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }}>
+            <div className="ag-theme-quartz" style={{ height: '500px', width: '100%' }} id="myGrid">
             {loading ? (
                 <div className="loading-overlay">
                     <img src={loadingImage} alt="Loading..." style={{ width: '50px', height: '50px' }} />
-                </div> // Use an image as the loading spinner
+                </div>
             ) : (
                 <AgGridReact
                     ref={gridRef}
